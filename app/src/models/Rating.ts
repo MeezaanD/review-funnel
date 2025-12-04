@@ -1,5 +1,5 @@
 export interface Rating {
-  businessId: string
-  stars: number
-  timestamp: number
+	businessId: string;
+	stars: number;
+	timestamp: number;
 }

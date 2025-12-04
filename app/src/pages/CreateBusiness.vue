@@ -1,41 +1,43 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { addDoc, collection } from 'firebase/firestore'
-import { db } from '../services/firebase'
-import { useRouter } from 'vue-router'
+import { ref } from "vue";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../services/firebase";
+import { useRouter } from "vue-router";
 
-const router = useRouter()
-const name = ref('')
-const email = ref('')
-const googleProfileUrl = ref('')
-const loading = ref(false)
-const error = ref('')
+const router = useRouter();
+const name = ref("");
+const email = ref("");
+const googleProfileUrl = ref("");
+const loading = ref(false);
+const error = ref("");
 
 const onSubmit = async () => {
   if (!name.value || !email.value || !googleProfileUrl.value) {
-    error.value = 'All fields are required.'
-    return
+    error.value = "All fields are required.";
+    return;
   }
 
-  loading.value = true
-  error.value = ''
+  loading.value = true;
+  error.value = "";
 
   try {
-    const docRef = await addDoc(collection(db, 'businesses'), {
+    const docRef = await addDoc(collection(db, "businesses"), {
       name: name.value,
       email: email.value,
       googleProfileUrl: googleProfileUrl.value,
-      createdAt: Date.now()
-    })
-    alert(`Business created! Shareable link: ${window.location.origin}/${docRef.id}`)
-    router.push(`/admin`)
+      createdAt: Date.now(),
+    });
+    alert(
+      `Business created! Shareable link: ${window.location.origin}/${docRef.id}`,
+    );
+    router.push(`/admin`);
   } catch (err) {
-    console.error(err)
-    error.value = 'Failed to create business.'
+    console.error(err);
+    error.value = "Failed to create business.";
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 </script>
 
 <template>
@@ -49,7 +51,7 @@ const onSubmit = async () => {
         <UInput v-model="googleProfileUrl" placeholder="Google Profile URL" />
 
         <UButton type="button" :disabled="loading" @click="onSubmit">
-          {{ loading ? 'Creating...' : 'Create & Generate Link' }}
+          {{ loading ? "Creating..." : "Create & Generate Link" }}
         </UButton>
 
         <p v-if="error" class="text-red-500 text-center">{{ error }}</p>
