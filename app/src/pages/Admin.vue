@@ -134,8 +134,12 @@ const copyLink = (id: string) => {
 							<tr v-for="b in businesses" :key="b.id">
 								<td class="px-6 py-4">
 									<div v-if="editingId === b.id" class="space-y-2">
-										<UInput v-model="editName" placeholder="Business Name" />
-										<UInput v-model="editGoogle" placeholder="Google Profile URL" />
+										<UInput v-model="editName" placeholder="Business Name" :ui="{
+											base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+										}" />
+										<UInput v-model="editGoogle" placeholder="Google Profile URL" :ui="{
+											base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+										}" />
 									</div>
 									<div v-else>
 										<div class="font-medium text-gray-900">{{ b.name }}</div>
@@ -147,7 +151,9 @@ const copyLink = (id: string) => {
 
 								<td class="px-6 py-4">
 									<div v-if="editingId === b.id">
-										<UInput v-model="editEmail" placeholder="Email" type="email" />
+										<UInput v-model="editEmail" placeholder="Email" type="email" :ui="{
+											base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+										}" />
 									</div>
 									<div v-else class="text-gray-900">{{ b.email }}</div>
 								</td>
@@ -182,9 +188,15 @@ const copyLink = (id: string) => {
 				<div v-for="b in businesses" :key="b.id" class="bg-white rounded-lg shadow-sm p-4">
 
 					<div v-if="editingId === b.id" class="space-y-4">
-						<UInput v-model="editName" placeholder="Business Name" />
-						<UInput v-model="editEmail" placeholder="Email" type="email" />
-						<UInput v-model="editGoogle" placeholder="Google Profile URL" />
+						<UInput v-model="editName" placeholder="Business Name" :ui="{
+							base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+						}" />
+						<UInput v-model="editEmail" placeholder="Email" type="email" :ui="{
+							base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+						}" />
+						<UInput v-model="editGoogle" placeholder="Google Profile URL" :ui="{
+							base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+						}" />
 
 						<div class="flex gap-2 pt-2">
 							<UButton size="sm" @click="saveEdit" class="flex-1">

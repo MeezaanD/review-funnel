@@ -62,7 +62,9 @@ const onSubmit = async () => {
 						<label class="block text-sm font-medium text-gray-700 mb-2">
 							Business Name
 						</label>
-						<UInput v-model="name" placeholder="Enter business name" size="lg" :disabled="loading" />
+						<UInput v-model="name" placeholder="Enter business name" size="lg" :disabled="loading" :ui="{
+							base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-white dark:text-gray-900 dark:border-gray-300'
+						}" />
 					</div>
 
 					<!-- Email -->
@@ -71,7 +73,9 @@ const onSubmit = async () => {
 							Email Address
 						</label>
 						<UInput v-model="email" type="email" placeholder="business@example.com" size="lg"
-							:disabled="loading" />
+							:disabled="loading" :ui="{
+								base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-white dark:text-gray-900 dark:border-gray-300'
+							}" />
 					</div>
 
 					<!-- Google Profile -->
@@ -80,7 +84,9 @@ const onSubmit = async () => {
 							Google Profile URL
 						</label>
 						<UInput v-model="googleProfileUrl" placeholder="https://g.page/your-business" size="lg"
-							:disabled="loading" />
+							:disabled="loading" :ui="{
+								base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-white dark:text-gray-900 dark:border-gray-300'
+							}" />
 						<p class="text-xs text-gray-500 mt-2">
 							Customers will be directed to this Google review page
 						</p>
