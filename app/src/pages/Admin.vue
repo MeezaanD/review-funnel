@@ -1,16 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { RouterLink } from "vue-router";
-
-interface Business {
-	id: string;
-	name: string;
-	email: string;
-	googleProfileUrl: string;
-	createdAt: number;
-}
+import { type Business } from "../models/Business";
 
 const businesses = ref<Business[]>([]);
 const loading = ref(false);
@@ -53,6 +46,19 @@ const cancelEdit = () => {
 	editingId.value = null;
 };
 
+const deleteBusiness = async (id: string) => {
+	if (!confirm("Are you sure you want to delete this business?")) return;
+	try {
+		const docRef = doc(db, "businesses", id);
+		await deleteDoc(docRef);
+		await loadBusinesses();
+		alert("Business deleted successfully.");
+	} catch (error) {
+		console.error(error);
+		alert("Failed to delete business.");
+	}
+};
+
 const copyLink = (id: string) => {
 	navigator.clipboard.writeText(`${window.location.origin}/${id}`);
 	alert("Link copied to clipboard!");
@@ -60,58 +66,188 @@ const copyLink = (id: string) => {
 </script>
 
 <template>
-	<div class="min-h-screen p-6 bg-gray-50 flex flex-col items-center gap-6">
-		<UCard class="max-w-4xl w-full p-6 shadow-lg">
-			<h1 class="text-2xl font-bold mb-4 text-center">All Businesses</h1>
+	<div class="min-h-screen bg-gray-50 p-4">
+		<!-- Header Card (Consistent with home page) -->
+		<div class="max-w-4xl mx-auto mb-6">
+			<div class="bg-white rounded-lg shadow-sm p-6">
+				<div class="text-center">
+					<h1 class="text-2xl font-semibold text-gray-900 mb-2">
+						Businesses
+					</h1>
+					<p class="text-gray-600">
+						Manage your business profiles and review links
+					</p>
+				</div>
 
-			<table class="min-w-full border">
-				<thead>
-					<tr class="border-b bg-gray-100">
-						<th class="p-2 text-left">Name</th>
-						<th class="p-2 text-left">Email</th>
-						<th class="p-2 text-left">Google Profile</th>
-						<th class="p-2 text-left">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr v-for="b in businesses" :key="b.id" class="border-b">
-						<td class="p-2">
-							<div v-if="editingId === b.id">
-								<UInput v-model="editName" />
-							</div>
-							<div v-else>{{ b.name }}</div>
-						</td>
+				<!-- Back to Home Link -->
+				<div class="mt-6 text-center">
+					<RouterLink to="/">
+						<UButton variant="ghost" size="sm" class="text-gray-600">
+							← Back to Home
+						</UButton>
+					</RouterLink>
+				</div>
+			</div>
+		</div>
 
-						<td class="p-2">
-							<div v-if="editingId === b.id">
-								<UInput v-model="editEmail" />
-							</div>
-							<div v-else>{{ b.email }}</div>
-						</td>
+		<!-- Loading State -->
+		<div v-if="loading" class="max-w-4xl mx-auto">
+			<div class="bg-white rounded-lg shadow-sm p-8 text-center">
+				<div class="animate-pulse">
+					<div class="h-4 bg-gray-200 rounded w-1/4 mx-auto mb-4"></div>
+					<div class="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+				</div>
+			</div>
+		</div>
 
-						<td class="p-2">
-							<div v-if="editingId === b.id">
-								<UInput v-model="editGoogle" />
-							</div>
-							<div v-else>{{ b.googleProfileUrl }}</div>
-						</td>
+		<!-- Empty State -->
+		<div v-else-if="!businesses.length" class="max-w-4xl mx-auto">
+			<div class="bg-white rounded-lg shadow-sm p-8 text-center">
+				<div class="text-gray-500 mb-4">
+					No businesses found
+				</div>
+				<RouterLink to="/create">
+					<UButton>
+						Create First Business
+					</UButton>
+				</RouterLink>
+			</div>
+		</div>
 
-						<td class="p-2 flex gap-2 flex-wrap">
-							<div v-if="editingId === b.id">
-								<UButton size="sm" @click="saveEdit">Save</UButton>
-								<UButton size="sm" variant="secondary" @click="cancelEdit">Cancel</UButton>
+		<!-- Business List (Mobile: Cards, Desktop: Table) -->
+		<div v-else class="max-w-4xl mx-auto space-y-4">
+			<!-- Desktop Table (hidden on mobile) -->
+			<div class="hidden lg:block bg-white rounded-lg shadow-sm overflow-hidden">
+				<div class="overflow-x-auto">
+					<table class="min-w-full divide-y divide-gray-200">
+						<thead class="bg-gray-50">
+							<tr>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Business
+								</th>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Contact
+								</th>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Actions
+								</th>
+							</tr>
+						</thead>
+						<tbody class="bg-white divide-y divide-gray-200">
+							<tr v-for="b in businesses" :key="b.id">
+								<td class="px-6 py-4">
+									<div v-if="editingId === b.id" class="space-y-2">
+										<UInput v-model="editName" placeholder="Business Name" :ui="{
+											base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+										}" />
+										<UInput v-model="editGoogle" placeholder="Google Profile URL" :ui="{
+											base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+										}" />
+									</div>
+									<div v-else>
+										<div class="font-medium text-gray-900">{{ b.name }}</div>
+										<div class="text-sm text-gray-500 truncate max-w-xs">
+											{{ b.googleProfileUrl }}
+										</div>
+									</div>
+								</td>
+
+								<td class="px-6 py-4">
+									<div v-if="editingId === b.id">
+										<UInput v-model="editEmail" placeholder="Email" type="email" :ui="{
+											base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+										}" />
+									</div>
+									<div v-else class="text-gray-900">{{ b.email }}</div>
+								</td>
+
+								<td class="px-6 py-4">
+									<div v-if="editingId === b.id" class="space-x-2">
+										<UButton size="sm" @click="saveEdit">Save</UButton>
+										<UButton size="sm" variant="ghost" @click="cancelEdit">Cancel</UButton>
+									</div>
+									<div v-else class="flex gap-2 flex-wrap">
+										<UButton size="sm" variant="outline" @click="startEdit(b)">
+											Edit
+										</UButton>
+										<UButton size="sm" variant="outline" @click="() => copyLink(b.id)">
+											Copy Link
+										</UButton>
+										<RouterLink :to="`/${b.id}`">
+											<UButton size="sm">
+												View
+											</UButton>
+										</RouterLink>
+										<UButton size="sm" variant="outline" color="red"
+											@click="() => deleteBusiness(b.id)"
+											class="text-red-600 border-red-200 hover:bg-red-50">
+											Delete
+										</UButton>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Mobile Cards (visible on mobile) -->
+			<div class="lg:hidden space-y-4">
+				<div v-for="b in businesses" :key="b.id" class="bg-white rounded-lg shadow-sm p-4">
+
+					<div v-if="editingId === b.id" class="space-y-4">
+						<UInput v-model="editName" placeholder="Business Name" :ui="{
+							base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+						}" />
+						<UInput v-model="editEmail" placeholder="Email" type="email" :ui="{
+							base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+						}" />
+						<UInput v-model="editGoogle" placeholder="Google Profile URL" :ui="{
+							base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+						}" />
+
+						<div class="flex gap-2 pt-2">
+							<UButton size="sm" @click="saveEdit" class="flex-1">
+								Save
+							</UButton>
+							<UButton size="sm" variant="ghost" @click="cancelEdit" class="flex-1">
+								Cancel
+							</UButton>
+						</div>
+					</div>
+
+					<div v-else>
+						<div class="space-y-3">
+							<div>
+								<h3 class="font-semibold text-gray-900">{{ b.name }}</h3>
+								<p class="text-sm text-gray-600 mt-1">{{ b.email }}</p>
+								<p class="text-sm text-gray-500 truncate mt-1">{{ b.googleProfileUrl }}</p>
 							</div>
-							<div v-else class="flex gap-2 flex-wrap">
-								<UButton size="sm" @click="startEdit(b)">Edit</UButton>
-								<UButton size="sm" variant="secondary" @click="() => copyLink(b.id)">Copy Link</UButton>
-								<RouterLink :to="`/${b.id}`">
-									<UButton size="sm" variant="secondary">View Funnel</UButton>
+
+							<div class="grid grid-cols-2 gap-2 pt-2">
+								<UButton size="sm" variant="outline" @click="startEdit(b)" class="col-span-1">
+									Edit
+								</UButton>
+								<UButton size="sm" variant="outline" @click="() => copyLink(b.id)" class="col-span-1">
+									Copy Link
+								</UButton>
+								<RouterLink :to="`/${b.id}`" class="col-span-1">
+									<UButton size="sm" class="w-full">
+										View
+									</UButton>
 								</RouterLink>
+								<UButton size="sm" variant="outline" color="red" @click="() => deleteBusiness(b.id)"
+									class="col-span-1 text-red-600 border-red-200 hover:bg-red-50">
+									Delete
+								</UButton>
 							</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</UCard>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
