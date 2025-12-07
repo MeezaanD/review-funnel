@@ -1,16 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { RouterLink } from "vue-router";
-
-interface Business {
-	id: string;
-	name: string;
-	email: string;
-	googleProfileUrl: string;
-	createdAt: number;
-}
+import { type Business } from "../models/Business";
 
 const businesses = ref<Business[]>([]);
 const loading = ref(false);
@@ -51,6 +44,19 @@ const saveEdit = async () => {
 
 const cancelEdit = () => {
 	editingId.value = null;
+};
+
+const deleteBusiness = async (id: string) => {
+	if (!confirm("Are you sure you want to delete this business?")) return;
+	try {
+		const docRef = doc(db, "businesses", id);
+		await deleteDoc(docRef);
+		await loadBusinesses();
+		alert("Business deleted successfully.");
+	} catch (error) {
+		console.error(error);
+		alert("Failed to delete business.");
+	}
 };
 
 const copyLink = (id: string) => {
@@ -175,6 +181,11 @@ const copyLink = (id: string) => {
 												View
 											</UButton>
 										</RouterLink>
+										<UButton size="sm" variant="outline" color="red"
+											@click="() => deleteBusiness(b.id)"
+											class="text-red-600 border-red-200 hover:bg-red-50">
+											Delete
+										</UButton>
 									</div>
 								</td>
 							</tr>
@@ -216,18 +227,22 @@ const copyLink = (id: string) => {
 								<p class="text-sm text-gray-500 truncate mt-1">{{ b.googleProfileUrl }}</p>
 							</div>
 
-							<div class="flex gap-2 pt-2">
-								<UButton size="sm" variant="outline" @click="startEdit(b)" class="flex-1">
+							<div class="grid grid-cols-2 gap-2 pt-2">
+								<UButton size="sm" variant="outline" @click="startEdit(b)" class="col-span-1">
 									Edit
 								</UButton>
-								<UButton size="sm" variant="outline" @click="() => copyLink(b.id)" class="flex-1">
+								<UButton size="sm" variant="outline" @click="() => copyLink(b.id)" class="col-span-1">
 									Copy Link
 								</UButton>
-								<RouterLink :to="`/${b.id}`" class="flex-1">
+								<RouterLink :to="`/${b.id}`" class="col-span-1">
 									<UButton size="sm" class="w-full">
 										View
 									</UButton>
 								</RouterLink>
+								<UButton size="sm" variant="outline" color="red" @click="() => deleteBusiness(b.id)"
+									class="col-span-1 text-red-600 border-red-200 hover:bg-red-50">
+									Delete
+								</UButton>
 							</div>
 						</div>
 					</div>
