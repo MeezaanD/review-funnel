@@ -12,7 +12,7 @@ const loading = ref(true);
 
 onMounted(async () => {
 	const businessData = await getBusiness(route.params.businessId as string);
-	business.value = businessData;
+	business.value = { id: route.params.businessId, ...businessData }; // attach id
 	loading.value = false;
 });
 
