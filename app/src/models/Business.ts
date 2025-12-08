@@ -3,5 +3,8 @@ export interface Business {
 	name: string;
 	email: string;
 	googleProfileUrl: string;
+	logoUrl: string | null;
+	primaryColor: string;
+	secondaryColor: string;
 	createdAt: number;
 }

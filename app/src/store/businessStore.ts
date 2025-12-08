@@ -1,14 +1,8 @@
 import { ref } from "vue";
+import type { Business } from "../models/Business";
 
-export const businesses = ref<
-	Array<{ id: string; name: string; email: string; googleProfileUrl: string }>
->([]);
+export const businesses = ref<Business[]>([]);
 
-export const addBusiness = (business: {
-	id: string;
-	name: string;
-	email: string;
-	googleProfileUrl: string;
-}) => {
-	businesses.value.push(business);
+export const addBusiness = (business: Business) => {
+  businesses.value.push(business);
 };
