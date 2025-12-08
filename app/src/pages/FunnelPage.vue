@@ -41,56 +41,113 @@ const secondaryStyle = computed(() => ({
 	backgroundColor: business.value?.secondaryColor || "#1e293b",
 	color: "#fff",
 }));
+
+const backgroundGradient = computed(() => {
+	const primary = business.value?.primaryColor || "#2563eb";
+	const secondary = business.value?.secondaryColor || "#1e293b";
+	return `linear-gradient(135deg, ${secondary}15 0%, ${primary}10 100%)`;
+});
 </script>
 
 <template>
-	<div class="min-h-screen p-4" :style="{ backgroundColor: business?.secondaryColor || '#f0f0f0' }">
-		<div class="max-w-md mx-auto">
-			<div v-if="loading" class="animate-pulse space-y-4 p-6 bg-white rounded-lg shadow">
-				<div class="h-12 w-12 rounded-full bg-gray-200 mx-auto"></div>
-				<div class="h-6 bg-gray-200 rounded w-3/4 mx-auto"></div>
-				<div class="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
-			</div>
-
-			<div v-else class="bg-white rounded-lg shadow-sm p-6 mb-6">
-				<!-- Business Logo -->
-				<div class="text-center mb-6">
-					<img v-if="business?.logoUrl" :src="business.logoUrl" alt="Business Logo"
-						class="mx-auto h-20 w-20 rounded-full object-cover border-2 border-gray-200 shadow-sm" />
-					<h1 class="text-2xl font-semibold mt-3">{{ business?.name }}</h1>
-					<p class="text-gray-600 mt-1">Please rate your experience</p>
-				</div>
-
-				<!-- Star Rating Buttons -->
-				<div class="flex justify-center gap-3 flex-wrap">
-					<UButton v-for="i in 5" :key="i" variant="outline" :style="primaryStyle"
-						class="min-w-[60px] py-4 text-lg hover:opacity-90 transition-all duration-150"
-						@click="onRate(i)">
-						<div class="flex items-center gap-1 justify-center">
-							<span class="text-xl">⭐</span>
-							<span class="font-medium">{{ i }}</span>
+	<div class="min-h-screen py-4 sm:py-8 px-3 sm:px-4" :style="{ background: backgroundGradient }">
+		<div class="max-w-2xl mx-auto">
+			<!-- Loading State -->
+			<div v-if="loading"
+				class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+				<div class="animate-pulse p-6 sm:p-8 lg:p-12">
+					<div class="flex flex-col items-center space-y-6">
+						<div class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gray-200"></div>
+						<div class="space-y-3 w-full">
+							<div class="h-8 bg-gray-200 rounded-lg w-3/4 mx-auto"></div>
+							<div class="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
 						</div>
-					</UButton>
-				</div>
-
-				<!-- Rating Scale Info -->
-				<div class="border-t pt-6 mt-6 text-center text-gray-500 text-sm">
-					<div class="grid grid-cols-5 gap-2 mb-2">
-						<span class="text-xs">Poor</span>
-						<span class="text-xs">Fair</span>
-						<span class="text-xs">Good</span>
-						<span class="text-xs">Very Good</span>
-						<span class="text-xs">Excellent</span>
+						<div class="flex gap-3 w-full justify-center">
+							<div v-for="i in 5" :key="i" class="h-16 w-16 sm:h-20 sm:w-20 bg-gray-200 rounded-xl"></div>
+						</div>
 					</div>
-					<p>Tap a star to submit your rating</p>
 				</div>
 			</div>
 
-			<!-- Back Button -->
-			<div class="text-center mt-4">
-				<RouterLink to="/">
-					<UButton :style="secondaryStyle" size="sm">← Back to Home</UButton>
-				</RouterLink>
+			<!-- Content -->
+			<div v-else class="space-y-4 sm:space-y-6">
+				<!-- Main Rating Card -->
+				<div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+					<div class="p-6 sm:p-8 lg:p-12">
+						<!-- Business Header -->
+						<div class="text-center mb-8 sm:mb-10">
+							<div class="mb-4 sm:mb-6">
+								<img v-if="business?.logoUrl" :src="business.logoUrl" alt="Business Logo"
+									class="mx-auto h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover border-4 border-gray-100 shadow-lg" />
+								<div v-else
+									class="mx-auto h-20 w-20 sm:h-24 sm:w-24 bg-linear-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center border-4 border-gray-100 shadow-lg">
+									<svg class="w-10 h-10 sm:w-12 sm:h-12 text-gray-400" fill="none"
+										stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+											d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+									</svg>
+								</div>
+							</div>
+							<h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">{{ business?.name
+								}}</h1>
+							<p class="text-sm sm:text-base text-gray-600">How was your experience?</p>
+						</div>
+
+						<!-- Star Rating Buttons -->
+						<div class="mb-8 sm:mb-10">
+							<div class="flex justify-center gap-2 sm:gap-3 flex-wrap">
+								<button v-for="i in 5" :key="i" :style="primaryStyle"
+									class="flex flex-col items-center justify-center min-w-[60px] sm:min-w-20 h-20 sm:h-24 rounded-xl sm:rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95 border-2 border-transparent hover:border-opacity-50"
+									@click="onRate(i)">
+									<span class="text-2xl sm:text-3xl mb-1">⭐</span>
+									<span class="text-base sm:text-lg font-bold">{{ i }}</span>
+								</button>
+							</div>
+						</div>
+
+						<!-- Rating Scale Labels -->
+						<div class="pt-6 sm:pt-8 border-t border-gray-100">
+							<div class="grid grid-cols-5 gap-1 sm:gap-2 mb-4">
+								<div class="text-center">
+									<span class="text-xs sm:text-sm text-gray-500 font-medium">Poor</span>
+								</div>
+								<div class="text-center">
+									<span class="text-xs sm:text-sm text-gray-500 font-medium">Fair</span>
+								</div>
+								<div class="text-center">
+									<span class="text-xs sm:text-sm text-gray-500 font-medium">Good</span>
+								</div>
+								<div class="text-center">
+									<span class="text-xs sm:text-sm text-gray-500 font-medium">Very Good</span>
+								</div>
+								<div class="text-center">
+									<span class="text-xs sm:text-sm text-gray-500 font-medium">Excellent</span>
+								</div>
+							</div>
+							<div class="flex items-center justify-center gap-2 text-gray-600">
+								<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+										d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+								</svg>
+								<p class="text-xs sm:text-sm">Tap a star to submit your rating</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Back Button -->
+				<div class="text-center">
+					<RouterLink to="/">
+						<button :style="secondaryStyle"
+							class="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95 text-sm sm:text-base font-medium">
+							<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+									d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+							</svg>
+							Back to Home
+						</button>
+					</RouterLink>
+				</div>
 			</div>
 		</div>
 	</div>

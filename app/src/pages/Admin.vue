@@ -38,7 +38,6 @@ const startEdit = (b: Business) => {
 	editLogoFile.value = null;
 };
 
-// method to get the logo src safely
 const getLogoSrc = (logo: string | null, file: File | null) => {
 	return file ? globalThis.URL.createObjectURL(file) : logo ?? "";
 };
@@ -98,194 +97,208 @@ const copyLink = (id: string) => {
 </script>
 
 <template>
-	<div class="min-h-screen bg-gray-50 p-4">
+	<div class="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 py-4 sm:py-8 px-3 sm:px-4">
 		<!-- Header -->
-		<div class="max-w-4xl mx-auto mb-6">
-			<div class="bg-white rounded-lg shadow-sm p-6 text-center">
-				<h1 class="text-2xl font-semibold text-gray-900 mb-2">Businesses</h1>
-				<p class="text-gray-600">Manage your business profiles and review links</p>
-				<div class="mt-6">
-					<RouterLink to="/">
-						<UButton variant="ghost" size="sm" class="text-gray-600">← Back to Home</UButton>
+		<div class="max-w-6xl mx-auto mb-4 sm:mb-8">
+			<div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 lg:p-8">
+				<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+					<div>
+						<h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Business Management</h1>
+						<p class="text-sm sm:text-base text-gray-500">Manage your business profiles and review links</p>
+					</div>
+					<RouterLink to="/" class="self-start sm:self-auto">
+						<UButton variant="ghost" size="sm" class="text-gray-600 hover:text-gray-900">
+							← Back to Home
+						</UButton>
 					</RouterLink>
 				</div>
 			</div>
 		</div>
 
 		<!-- Loading -->
-		<div v-if="loading" class="max-w-4xl mx-auto">
-			<div class="bg-white rounded-lg shadow-sm p-8 text-center">
-				<div class="animate-pulse">
-					<div class="h-4 bg-gray-200 rounded w-1/4 mx-auto mb-4"></div>
-					<div class="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+		<div v-if="loading" class="max-w-6xl mx-auto">
+			<div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 p-8 sm:p-12 text-center">
+				<div class="animate-pulse space-y-4">
+					<div class="h-6 sm:h-8 bg-gray-200 rounded-lg w-1/2 sm:w-1/3 mx-auto"></div>
+					<div class="h-4 bg-gray-200 rounded w-2/3 sm:w-1/2 mx-auto"></div>
 				</div>
 			</div>
 		</div>
 
 		<!-- Empty state -->
-		<div v-else-if="!businesses.length" class="max-w-4xl mx-auto">
-			<div class="bg-white rounded-lg shadow-sm p-8 text-center">
-				<div class="text-gray-500 mb-4">No businesses found</div>
+		<div v-else-if="!businesses.length" class="max-w-6xl mx-auto">
+			<div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 p-8 sm:p-12 text-center">
+				<div class="text-gray-400 text-base sm:text-lg mb-4 sm:mb-6">No businesses found</div>
 				<RouterLink to="/create">
-					<UButton>Create First Business</UButton>
+					<UButton size="lg">Create Your First Business</UButton>
 				</RouterLink>
 			</div>
 		</div>
 
 		<!-- Businesses list -->
-		<div v-else class="max-w-4xl mx-auto space-y-4">
-			<!-- Desktop Table -->
-			<div class="hidden lg:block bg-white rounded-lg shadow-sm overflow-hidden">
-				<div class="overflow-x-auto">
-					<table class="min-w-full divide-y divide-gray-200">
-						<thead class="bg-gray-50">
-							<tr>
-								<th
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-									Business</th>
-								<th
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-									Contact</th>
-								<th
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-									Branding</th>
-								<th
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-									Actions</th>
-							</tr>
-						</thead>
-						<tbody class="bg-white divide-y divide-gray-200">
-							<tr v-for="b in businesses" :key="b.id">
-								<!-- Business & Logo -->
-								<td class="px-6 py-4">
-									<div v-if="editingId === b.id" class="space-y-2">
-										<UInput v-model="editName" placeholder="Business Name" :disabled="loading" :ui="{
-											base: 'bg-white text-gray-900 border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500'
-										}" />
-										<UInput v-model="editGoogle" placeholder="Google Profile URL"
-											:disabled="loading" :ui="{
-												base: 'bg-white text-gray-900 border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500'
-											}" />
-										<div class="flex items-center gap-2">
-											<div v-if="b.logoUrl || editLogoFile">
-												<img :src="getLogoSrc(b.logoUrl, editLogoFile)" alt="logo"
-													class="h-16 w-16 object-cover rounded-full border-2 border-gray-200 shadow-sm" />
-											</div>
-											<div v-else class="h-12 w-12 bg-gray-200 rounded-full"></div>
-											<input type="file" accept="image/*" @change="onFileChange" />
+		<div v-else class="max-w-6xl mx-auto">
+			<div class="grid gap-4 sm:gap-6">
+				<div v-for="b in businesses" :key="b.id" 
+					class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+					
+					<!-- Edit Mode -->
+					<div v-if="editingId === b.id" class="p-4 sm:p-6 lg:p-8">
+						<div class="space-y-4 sm:space-y-6">
+							<!-- Logo Section -->
+							<div class="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6 pb-4 sm:pb-6 border-b border-gray-100">
+								<div class="shrink-0 mx-auto sm:mx-0">
+									<div v-if="b.logoUrl || editLogoFile" class="relative group">
+										<img :src="getLogoSrc(b.logoUrl, editLogoFile)" 
+											alt="Business logo"
+											class="h-20 w-20 sm:h-24 sm:w-24 object-cover rounded-xl sm:rounded-2xl border-2 border-gray-200 shadow-sm" />
+										<div class="absolute inset-0 bg-black bg-opacity-40 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+											<span class="text-white text-xs font-medium">Change</span>
 										</div>
 									</div>
-									<div v-else class="flex items-center gap-2">
-										<img v-if="b.logoUrl" :src="b.logoUrl"
-											class="h-16 w-16 object-cover rounded-full border-2 border-gray-200 shadow-sm" />
-										<div class="font-medium text-gray-900">{{ b.name }}</div>
+									<div v-else class="h-20 w-20 sm:h-24 sm:w-24 bg-linear-to-br from-gray-200 to-gray-300 rounded-xl sm:rounded-2xl flex items-center justify-center">
+										<svg class="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+										</svg>
 									</div>
-								</td>
-
-								<!-- Contact -->
-								<td class="px-6 py-4">
-									<div v-if="editingId === b.id">
-										<UInput v-model="editEmail" type="email" placeholder="Email" :disabled="loading"
-											:ui="{
-												base: 'bg-white text-gray-900 border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500'
-											}" />
-									</div>
-									<div v-else class="text-gray-900">{{ b.email }}</div>
-								</td>
-
-								<!-- Branding -->
-								<td class="px-6 py-4">
-									<div v-if="editingId === b.id" class="flex gap-2">
-										<input type="color" v-model="editPrimaryColor" class="h-8 w-8 rounded"
-											title="Primary Color" />
-										<input type="color" v-model="editSecondaryColor" class="h-8 w-8 rounded"
-											title="Secondary Color" />
-									</div>
-									<div v-else class="flex gap-2">
-										<div class="h-6 w-6 rounded" :style="{ backgroundColor: b.primaryColor }"></div>
-										<div class="h-6 w-6 rounded" :style="{ backgroundColor: b.secondaryColor }">
-										</div>
-									</div>
-								</td>
-
-								<!-- Actions -->
-								<td class="px-6 py-4">
-									<div v-if="editingId === b.id" class="space-x-2">
-										<UButton size="sm" @click="saveEdit">Save</UButton>
-										<UButton size="sm" variant="ghost" @click="cancelEdit">Cancel</UButton>
-									</div>
-									<div v-else class="flex gap-2 flex-wrap">
-										<UButton size="sm" variant="outline" @click="startEdit(b)">Edit</UButton>
-										<UButton size="sm" variant="outline" @click="() => copyLink(b.id)">Copy Link
-										</UButton>
-										<RouterLink :to="`/${b.id}`">
-											<UButton size="sm">View</UButton>
-										</RouterLink>
-										<UButton size="sm" variant="outline" color="red"
-											@click="() => deleteBusiness(b.id)"
-											class="text-red-600 border-red-200 hover:bg-red-50">Delete</UButton>
-									</div>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-
-			<!-- Mobile Cards -->
-			<div class="lg:hidden space-y-4">
-				<div v-for="b in businesses" :key="b.id" class="bg-white rounded-lg shadow-sm p-4">
-					<div v-if="editingId === b.id" class="space-y-4">
-						<UInput v-model="editName" placeholder="Business Name" :disabled="loading" :ui="{
-							base: 'bg-white text-gray-900 border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500'
-						}" />
-						<UInput v-model="editEmail" type="email" placeholder="Email" :disabled="loading" :ui="{
-							base: 'bg-white text-gray-900 border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500'
-						}" />
-						<UInput v-model="editGoogle" placeholder="Google Profile URL" :disabled="loading" :ui="{
-							base: 'bg-white text-gray-900 border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500'
-						}" />
-						<div class="flex items-center gap-2">
-							<div v-if="b.logoUrl || editLogoFile">
-								<img :src="getLogoSrc(b.logoUrl, editLogoFile)" alt="logo"
-									class="h-16 w-16 object-cover rounded-full border-2 border-gray-200 shadow-sm" />
+								</div>
+								<div class="flex-1">
+									<label class="block text-sm font-medium text-gray-700 mb-2">Upload Logo</label>
+									<input type="file" accept="image/*" @change="onFileChange" 
+										class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" />
+								</div>
 							</div>
-							<div v-else class="h-12 w-12 bg-gray-200 rounded-full"></div>
-							<input type="file" accept="image/*" @change="onFileChange" />
-						</div>
-						<div class="flex gap-2 pt-2">
-							<input type="color" v-model="editPrimaryColor" class="h-8 w-8 rounded"
-								title="Primary Color" />
-							<input type="color" v-model="editSecondaryColor" class="h-8 w-8 rounded"
-								title="Secondary Color" />
-						</div>
-						<div class="flex gap-2 pt-2">
-							<UButton size="sm" @click="saveEdit" class="flex-1">Save</UButton>
-							<UButton size="sm" variant="ghost" @click="cancelEdit" class="flex-1">Cancel</UButton>
+
+							<!-- Business Info -->
+							<div class="grid sm:grid-cols-2 gap-4 sm:gap-6">
+								<div>
+									<label class="block text-sm font-medium text-gray-700 mb-2">Business Name</label>
+									<UInput v-model="editName" placeholder="Enter business name" :disabled="loading" 
+										:ui="{ base: 'bg-white text-gray-900 border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent' }" />
+								</div>
+								<div>
+									<label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+									<UInput v-model="editEmail" type="email" placeholder="business@example.com" :disabled="loading"
+										:ui="{ base: 'bg-white text-gray-900 border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent' }" />
+								</div>
+							</div>
+
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">Google Profile URL</label>
+								<UInput v-model="editGoogle" placeholder="https://g.page/your-business" :disabled="loading"
+									:ui="{ base: 'bg-white text-gray-900 border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent' }" />
+							</div>
+
+							<!-- Brand Colors -->
+							<div class="pt-4 sm:pt-6 border-t border-gray-100">
+								<label class="block text-sm font-medium text-gray-700 mb-4">Brand Colors</label>
+								<div class="grid sm:grid-cols-2 gap-4 sm:gap-6">
+									<div>
+										<label class="block text-xs text-gray-500 mb-2">Primary Color</label>
+										<div class="flex items-center gap-3">
+											<input type="color" v-model="editPrimaryColor" 
+												class="h-12 w-12 rounded-lg cursor-pointer border-2 border-gray-300" />
+											<span class="text-sm font-mono text-gray-600">{{ editPrimaryColor }}</span>
+										</div>
+									</div>
+									<div>
+										<label class="block text-xs text-gray-500 mb-2">Secondary Color</label>
+										<div class="flex items-center gap-3">
+											<input type="color" v-model="editSecondaryColor" 
+												class="h-12 w-12 rounded-lg cursor-pointer border-2 border-gray-300" />
+											<span class="text-sm font-mono text-gray-600">{{ editSecondaryColor }}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Action Buttons -->
+							<div class="flex flex-col sm:flex-row gap-3 pt-4 sm:pt-6 border-t border-gray-100">
+								<UButton @click="saveEdit" size="lg" class="flex-1 w-full">
+									Save Changes
+								</UButton>
+								<UButton variant="outline" @click="cancelEdit" size="lg" class="flex-1 w-full">
+									Cancel
+								</UButton>
+							</div>
 						</div>
 					</div>
 
-					<div v-else class="space-y-3">
-						<div class="flex items-center gap-2">
-							<img v-if="b.logoUrl" :src="b.logoUrl"
-								class="h-16 w-16 object-cover rounded-full border-2 border-gray-200 shadow-sm" />
-							<h3 class="font-semibold text-gray-900">{{ b.name }}</h3>
-						</div>
-						<p class="text-sm text-gray-600">{{ b.email }}</p>
-						<p class="text-sm text-gray-500 truncate">{{ b.googleProfileUrl }}</p>
-						<div class="flex gap-2 pt-2">
-							<div class="h-6 w-6 rounded" :style="{ backgroundColor: b.primaryColor }"></div>
-							<div class="h-6 w-6 rounded" :style="{ backgroundColor: b.secondaryColor }"></div>
-						</div>
-						<div class="grid grid-cols-2 gap-2 pt-2">
-							<UButton size="sm" variant="outline" @click="startEdit(b)" class="col-span-1">Edit</UButton>
-							<UButton size="sm" variant="outline" @click="() => copyLink(b.id)" class="col-span-1">Copy
-								Link</UButton>
-							<RouterLink :to="`/${b.id}`" class="col-span-1">
-								<UButton size="sm">View</UButton>
-							</RouterLink>
-							<UButton size="sm" variant="outline" color="red" @click="() => deleteBusiness(b.id)"
-								class="col-span-1 text-red-600 border-red-200 hover:bg-red-50">Delete</UButton>
+					<!-- View Mode -->
+					<div v-else class="p-4 sm:p-6 lg:p-8">
+						<div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 lg:gap-6">
+							<!-- Business Info -->
+							<div class="flex items-start gap-3 sm:gap-4 lg:gap-6 flex-1 min-w-0">
+								<div class="shrink-0">
+									<img v-if="b.logoUrl" :src="b.logoUrl" alt="Business logo"
+										class="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 object-cover rounded-xl sm:rounded-2xl border-2 border-gray-200 shadow-sm" />
+									<div v-else class="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 bg-linear-to-br from-gray-200 to-gray-300 rounded-xl sm:rounded-2xl flex items-center justify-center">
+										<svg class="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+										</svg>
+									</div>
+								</div>
+								
+								<div class="flex-1 min-w-0">
+									<h3 class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2 wrap-break-word">{{ b.name }}</h3>
+									<div class="space-y-1.5 sm:space-y-2">
+										<div class="flex items-center gap-2 text-gray-600">
+											<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+											</svg>
+											<span class="text-xs sm:text-sm truncate">{{ b.email }}</span>
+										</div>
+										<div class="flex items-center gap-2 text-gray-600">
+											<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+											</svg>
+											<span class="text-xs sm:text-sm truncate">{{ b.googleProfileUrl }}</span>
+										</div>
+										<div class="flex items-center gap-3 pt-1 sm:pt-2 flex-wrap">
+											<span class="text-xs text-gray-500 font-medium">Brand Colors:</span>
+											<div class="flex items-center gap-2">
+												<div class="h-6 w-6 sm:h-8 sm:w-8 rounded-lg shadow-sm border border-gray-200" 
+													:style="{ backgroundColor: b.primaryColor }"
+													:title="`Primary: ${b.primaryColor}`"></div>
+												<div class="h-6 w-6 sm:h-8 sm:w-8 rounded-lg shadow-sm border border-gray-200" 
+													:style="{ backgroundColor: b.secondaryColor }"
+													:title="`Secondary: ${b.secondaryColor}`"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Actions - Mobile: Grid, Desktop: Vertical Stack -->
+							<div class="grid grid-cols-2 sm:grid-cols-4 lg:flex lg:flex-col gap-2 pt-4 lg:pt-0 border-t lg:border-t-0 border-gray-100 lg:border-none shrink-0">
+								<UButton size="sm" variant="outline" @click="startEdit(b)" class="whitespace-nowrap justify-center">
+									<svg class="w-4 h-4 sm:mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+									</svg>
+									<span class="hidden sm:inline">Edit</span>
+								</UButton>
+								<UButton size="sm" variant="outline" @click="() => copyLink(b.id)" class="whitespace-nowrap justify-center">
+									<svg class="w-4 h-4 sm:mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+									</svg>
+									<span class="hidden sm:inline">Copy Link</span>
+								</UButton>
+								<RouterLink :to="`/${b.id}`" class="contents">
+									<UButton size="sm" class="w-full whitespace-nowrap justify-center">
+										<svg class="w-4 h-4 sm:mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+										</svg>
+										<span class="hidden sm:inline">View</span>
+									</UButton>
+								</RouterLink>
+								<UButton size="sm" variant="outline" color="red" @click="() => deleteBusiness(b.id)"
+									class="text-red-600 border-red-200 hover:bg-red-50 whitespace-nowrap justify-center">
+									<svg class="w-4 h-4 sm:mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+									</svg>
+									<span class="hidden sm:inline">Delete</span>
+								</UButton>
+							</div>
 						</div>
 					</div>
 				</div>
