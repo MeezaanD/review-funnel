@@ -159,8 +159,13 @@ const copyLink = (id: string) => {
 								<!-- Business & Logo -->
 								<td class="px-6 py-4">
 									<div v-if="editingId === b.id" class="space-y-2">
-										<UInput v-model="editName" placeholder="Business Name" />
-										<UInput v-model="editGoogle" placeholder="Google Profile URL" />
+										<UInput v-model="editName" placeholder="Business Name" :disabled="loading" :ui="{
+											base: 'bg-white text-gray-900 border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500'
+										}" />
+										<UInput v-model="editGoogle" placeholder="Google Profile URL"
+											:disabled="loading" :ui="{
+												base: 'bg-white text-gray-900 border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500'
+											}" />
 										<div class="flex items-center gap-2">
 											<div v-if="b.logoUrl || editLogoFile">
 												<img :src="getLogoSrc(b.logoUrl, editLogoFile)" alt="logo"
@@ -180,7 +185,10 @@ const copyLink = (id: string) => {
 								<!-- Contact -->
 								<td class="px-6 py-4">
 									<div v-if="editingId === b.id">
-										<UInput v-model="editEmail" placeholder="Email" type="email" />
+										<UInput v-model="editEmail" type="email" placeholder="Email" :disabled="loading"
+											:ui="{
+												base: 'bg-white text-gray-900 border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500'
+											}" />
 									</div>
 									<div v-else class="text-gray-900">{{ b.email }}</div>
 								</td>
@@ -228,9 +236,15 @@ const copyLink = (id: string) => {
 			<div class="lg:hidden space-y-4">
 				<div v-for="b in businesses" :key="b.id" class="bg-white rounded-lg shadow-sm p-4">
 					<div v-if="editingId === b.id" class="space-y-4">
-						<UInput v-model="editName" placeholder="Business Name" />
-						<UInput v-model="editEmail" placeholder="Email" type="email" />
-						<UInput v-model="editGoogle" placeholder="Google Profile URL" />
+						<UInput v-model="editName" placeholder="Business Name" :disabled="loading" :ui="{
+							base: 'bg-white text-gray-900 border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500'
+						}" />
+						<UInput v-model="editEmail" type="email" placeholder="Email" :disabled="loading" :ui="{
+							base: 'bg-white text-gray-900 border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500'
+						}" />
+						<UInput v-model="editGoogle" placeholder="Google Profile URL" :disabled="loading" :ui="{
+							base: 'bg-white text-gray-900 border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500'
+						}" />
 						<div class="flex items-center gap-2">
 							<div v-if="b.logoUrl || editLogoFile">
 								<img :src="getLogoSrc(b.logoUrl, editLogoFile)" alt="logo"
