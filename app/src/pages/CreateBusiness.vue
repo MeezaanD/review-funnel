@@ -99,17 +99,25 @@ const onSubmit = async () => {
 				<form @submit.prevent="onSubmit" class="space-y-5">
 					<div>
 						<label class="block text-sm font-medium text-gray-700 mb-2">Business Name</label>
-						<UInput v-model="name" placeholder="Enter business name" size="lg" />
+						<UInput v-model="name" placeholder="Enter business name" size="lg" :disabled="loading" :ui="{
+							base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-white dark:text-gray-900 dark:border-gray-300'
+						}" />
 					</div>
 
 					<div>
 						<label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-						<UInput v-model="email" type="email" placeholder="business@example.com" size="lg" />
+						<UInput v-model="email" type="email" placeholder="business@example.com" size="lg"
+							:disabled="loading" :ui="{
+								base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-white dark:text-gray-900 dark:border-gray-300'
+							}" />
 					</div>
 
 					<div>
 						<label class="block text-sm font-medium text-gray-700 mb-2">Google Profile URL</label>
-						<UInput v-model="googleProfileUrl" placeholder="https://g.page/your-business" size="lg" />
+						<UInput v-model="googleProfileUrl" placeholder="https://g.page/your-business" size="lg"
+							:disabled="loading" :ui="{
+								base: 'bg-white text-gray-900 border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-white dark:text-gray-900 dark:border-gray-300'
+							}" />
 					</div>
 
 					<!-- Logo Upload -->
