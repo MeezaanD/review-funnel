@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@nuxt/ui": "^4.2.1",
     "@unhead/vue": "^2.0.19",
     "cloudinary": "^2.8.0",

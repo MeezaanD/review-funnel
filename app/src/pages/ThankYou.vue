@@ -20,13 +20,6 @@
 				<p class="text-gray-600 mb-8">
 					Your feedback has been submitted successfully.
 				</p>
-
-				<!-- Action Button -->
-				<RouterLink to="/">
-					<UButton class="w-full justify-center py-3" size="lg">
-						Return to Home
-					</UButton>
-				</RouterLink>
 			</div>
 
 			<!-- Additional Navigation -->
@@ -34,23 +27,7 @@
 				<p class="text-gray-500 text-sm mb-4">
 					Your feedback helps businesses improve
 				</p>
-				<div class="space-x-4">
-					<RouterLink to="/admin">
-						<UButton variant="ghost" size="sm" class="text-gray-600">
-							View Businesses
-						</UButton>
-					</RouterLink>
-					<RouterLink to="/create">
-						<UButton variant="ghost" size="sm" class="text-gray-600">
-							Create Business
-						</UButton>
-					</RouterLink>
-				</div>
 			</div>
 		</div>
 	</div>
 </template>
-
-<script setup lang="ts">
-import { RouterLink } from "vue-router";
-</script>
