@@ -19,7 +19,7 @@ Built with **Vue 3**, **Vite**, **TypeScript**, **Nuxt UI**, and **Firebase**.
 ## Tech Stack
 
 - Vue 3 + TypeScript
-- Vite
 - Nuxt UI
 - Firebase Firestore
-- Vue Router
+- Cloudinary
+- Email Js

@@ -9,12 +9,15 @@ const password = ref("");
 const loading = ref(false);
 const error = ref("");
 
+const inputClasses =
+	"w-full rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 text-sm sm:text-base text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition";
+
 const handleLogin = async () => {
 	loading.value = true;
 	error.value = "";
 	try {
 		await login(email.value, password.value);
-		router.push("/"); // redirect to home after login
+		router.push("/");
 	} catch (err: any) {
 		console.error(err);
 		error.value = err.message || "Login failed";
@@ -25,23 +28,38 @@ const handleLogin = async () => {
 </script>
 
 <template>
-	<div class="min-h-screen bg-gray-50 p-4 flex items-center justify-center">
-		<div class="max-w-md w-full bg-white rounded-lg shadow-sm p-8">
-			<h1 class="text-2xl font-semibold text-gray-900 text-center mb-6">Login</h1>
-
-			<div class="space-y-4">
-				<input v-model="email" type="email" placeholder="Email"
-					class="w-full border border-gray-400 p-2 rounded-md text-gray-900" />
-				<input v-model="password" type="password" placeholder="Password"
-					class="w-full border border-gray-400 p-2 rounded-md text-gray-900" />
-
-				<button @click="handleLogin" :disabled="loading"
-					class="w-full py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600">
-					{{ loading ? "Logging in..." : "Login" }}
-				</button>
-
-				<p v-if="error" class="text-red-700 text-sm text-center">{{ error }}</p>
+	<div
+		class="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-100 px-4 py-8 sm:px-6 lg:px-8 flex items-center justify-center">
+		<div class="w-full max-w-xl space-y-6">
+			<div class="text-center space-y-2">
+				<p class="text-sm uppercase tracking-[0.3em] text-slate-400">Review Funnel</p>
+				<h1 class="text-3xl font-bold text-slate-900">Welcome back</h1>
+				<p class="text-base text-slate-500">Sign in to manage your businesses and review flows.</p>
 			</div>
+
+			<div class="bg-white/90 backdrop-blur rounded-3xl border border-slate-100 shadow-sm p-6 sm:p-8">
+				<form class="space-y-5" @submit.prevent="handleLogin">
+					<div class="space-y-2">
+						<label class="text-sm font-medium text-slate-700">Email address</label>
+						<input v-model="email" type="email" placeholder="you@example.com" :class="inputClasses" />
+					</div>
+					<div class="space-y-2">
+						<label class="text-sm font-medium text-slate-700">Password</label>
+						<input v-model="password" type="password" placeholder="••••••••" :class="inputClasses" />
+					</div>
+
+					<div class="space-y-3">
+						<button type="submit" :disabled="loading" class="btn btn-primary w-full">
+							{{ loading ? "Logging in..." : "Sign in" }}
+						</button>
+						<p v-if="error" class="text-sm text-red-600 text-center">{{ error }}</p>
+					</div>
+				</form>
+			</div>
+
+			<p class="text-center text-sm text-slate-500">
+				Need an account? Ask your administrator to invite you.
+			</p>
 		</div>
 	</div>
 </template>

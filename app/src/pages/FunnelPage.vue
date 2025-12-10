@@ -50,12 +50,12 @@ const backgroundGradient = computed(() => {
 </script>
 
 <template>
-	<div class="min-h-screen py-4 sm:py-8 px-3 sm:px-4" :style="{ background: backgroundGradient }">
-		<div class="max-w-2xl mx-auto">
+	<div class="min-h-screen py-6 sm:py-10 px-4 sm:px-6" :style="{ background: backgroundGradient }">
+		<div class="max-w-2xl mx-auto space-y-4 sm:space-y-6">
 			<!-- Loading State -->
 			<div v-if="loading"
-				class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-				<div class="animate-pulse p-6 sm:p-8 lg:p-12">
+				class="bg-white/95 backdrop-blur rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+				<div class="animate-pulse p-6 sm:p-8 lg:p-12 space-y-6">
 					<div class="flex flex-col items-center space-y-6">
 						<div class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gray-200"></div>
 						<div class="space-y-3 w-full">
@@ -72,11 +72,11 @@ const backgroundGradient = computed(() => {
 			<!-- Content -->
 			<div v-else class="space-y-4 sm:space-y-6">
 				<!-- Main Rating Card -->
-				<div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-					<div class="p-6 sm:p-8 lg:p-12">
+				<div class="bg-white/95 backdrop-blur rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+					<div class="p-6 sm:p-8 lg:p-12 space-y-8">
 						<!-- Business Header -->
-						<div class="text-center mb-8 sm:mb-10">
-							<div class="mb-4 sm:mb-6">
+						<div class="text-center space-y-6">
+							<div>
 								<img v-if="business?.logoUrl" :src="business.logoUrl" alt="Business Logo"
 									class="mx-auto h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover border-4 border-gray-100 shadow-lg" />
 								<div v-else
@@ -88,16 +88,16 @@ const backgroundGradient = computed(() => {
 									</svg>
 								</div>
 							</div>
-							<h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">{{ business?.name
-								}}</h1>
-							<p class="text-sm sm:text-base text-gray-600">How was your experience?</p>
+							<h1 class="text-2xl sm:text-3xl lg:text-4xl font-semibold text-slate-900">{{ business?.name
+							}}</h1>
+							<p class="text-sm sm:text-base text-slate-500">How was your experience?</p>
 						</div>
 
 						<!-- Star Rating Buttons -->
-						<div class="mb-8 sm:mb-10">
-							<div class="flex justify-center gap-2 sm:gap-3 flex-wrap">
+						<div>
+							<div class="flex justify-center gap-3 flex-wrap">
 								<button v-for="i in 5" :key="i" :style="primaryStyle"
-									class="flex flex-col items-center justify-center min-w-[60px] sm:min-w-20 h-20 sm:h-24 rounded-xl sm:rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95 border-2 border-transparent hover:border-opacity-50"
+									class="flex flex-col items-center justify-center min-w-[60px] sm:min-w-20 h-20 sm:h-24 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-white/60"
 									@click="onRate(i)">
 									<span class="text-2xl sm:text-3xl mb-1">⭐</span>
 									<span class="text-base sm:text-lg font-bold">{{ i }}</span>
@@ -106,7 +106,7 @@ const backgroundGradient = computed(() => {
 						</div>
 
 						<!-- Rating Scale Labels -->
-						<div class="pt-6 sm:pt-8 border-t border-gray-100">
+						<div class="pt-6 sm:pt-8 border-t border-slate-100">
 							<div class="grid grid-cols-5 gap-1 sm:gap-2 mb-4">
 								<div class="text-center">
 									<span class="text-xs sm:text-sm text-gray-500 font-medium">Poor</span>
@@ -139,7 +139,7 @@ const backgroundGradient = computed(() => {
 				<div class="text-center">
 					<RouterLink to="/">
 						<button :style="secondaryStyle"
-							class="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95 text-sm sm:text-base font-medium">
+							class="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl shadow-sm hover:shadow-md transition focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-white/60 text-sm sm:text-base font-semibold">
 							<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
 									d="M10 19l-7-7m0 0l7-7m-7 7h18" />
