@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useRouter } from "vue-router";
+import { uploadLogo } from "../services/cloudinary";
 
 const router = useRouter();
 
@@ -10,55 +11,32 @@ const name = ref("");
 const email = ref("");
 const googleProfileUrl = ref("");
 const logoFile = ref<File | null>(null);
+const bannerFile = ref<File | null>(null);
 
-const primaryColor = ref("#2563eb");   // default blue
-const secondaryColor = ref("#1e293b"); // default slate
+const primaryColor = ref("#2563eb");
+const secondaryColor = ref("#1e293b");
 
 const loading = ref(false);
 const error = ref("");
 
-// handle file selection
-const onFileChange = (e: Event) => {
+const onLogoChange = (e: Event) => {
 	const target = e.target as HTMLInputElement;
-	const file = target.files?.[0] ?? null;
-	logoFile.value = file;
+	logoFile.value = target.files?.[0] ?? null;
 };
 
-// Get preview URL for selected logo
+const onBannerChange = (e: Event) => {
+	const target = e.target as HTMLInputElement;
+	bannerFile.value = target.files?.[0] ?? null;
+};
+
 const getLogoPreview = () => {
 	return logoFile.value ? URL.createObjectURL(logoFile.value) : null;
 };
 
-// upload image to Cloudinary (unsigned)
-const uploadLogo = async (): Promise<string | null> => {
-	if (!logoFile.value) return null;
-
-	const formData = new FormData();
-	formData.append("file", logoFile.value);
-	formData.append("upload_preset", "review_funnel"); // replace with your preset name
-	formData.append("folder", "logos"); // optional folder
-
-	try {
-		const res = await fetch("https://api.cloudinary.com/v1_1/duuyolqrm/upload", {
-			method: "POST",
-			body: formData,
-		});
-
-		const data = await res.json();
-
-		if (!res.ok) {
-			console.error("Cloudinary error:", data);
-			return null;
-		}
-
-		return data.secure_url;
-	} catch (err) {
-		console.error("Cloudinary upload failed:", err);
-		return null;
-	}
+const getBannerPreview = () => {
+	return bannerFile.value ? URL.createObjectURL(bannerFile.value) : null;
 };
 
-// handle form submission
 const onSubmit = async () => {
 	if (!name.value || !email.value || !googleProfileUrl.value) {
 		error.value = "All fields are required.";
@@ -69,13 +47,15 @@ const onSubmit = async () => {
 	error.value = "";
 
 	try {
-		const logoUrl = await uploadLogo(); // upload logo first
+		const logoUrl = logoFile.value ? await uploadLogo(logoFile.value) : null;
+		const bannerUrl = bannerFile.value ? await uploadLogo(bannerFile.value) : null;
 
 		const docRef = await addDoc(collection(db, "businesses"), {
 			name: name.value,
 			email: email.value,
 			googleProfileUrl: googleProfileUrl.value,
-			logoUrl, // this will now be the Cloudinary URL
+			logoUrl,
+			displayBanner: bannerUrl,
 			primaryColor: primaryColor.value,
 			secondaryColor: secondaryColor.value,
 			createdAt: Date.now(),
@@ -92,7 +72,6 @@ const onSubmit = async () => {
 };
 </script>
 
-
 <template>
 	<div class="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-100 py-6 sm:py-10 px-4 sm:px-6">
 		<!-- Header -->
@@ -101,8 +80,7 @@ const onSubmit = async () => {
 				<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
 					<div>
 						<p class="text-xs uppercase tracking-[0.3em] text-slate-400 mb-2">Create</p>
-						<h1 class="text-2xl sm:text-3xl font-semibold text-slate-900">Create Business
-						</h1>
+						<h1 class="text-2xl sm:text-3xl font-semibold text-slate-900">Create Business</h1>
 						<p class="text-sm sm:text-base text-slate-500">Add branding and create shareable review funnels
 						</p>
 					</div>
@@ -149,9 +127,35 @@ const onSubmit = async () => {
 								<div class="flex-1">
 									<p class="text-sm text-slate-500 mb-2">Upload your business logo (PNG, JPG, or SVG)
 									</p>
-									<input type="file" accept="image/*" @change="onFileChange" :disabled="loading"
+									<input type="file" accept="image/*" @change="onLogoChange" :disabled="loading"
 										class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-2xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" />
 								</div>
+							</div>
+						</div>
+
+						<!-- Banner Upload Section -->
+						<div class="pb-6 border-b border-slate-100">
+							<label class="block text-sm font-semibold text-slate-800 mb-4">Display Banner</label>
+							<div class="space-y-4">
+								<div v-if="getBannerPreview()" class="relative group">
+									<img :src="getBannerPreview()!" alt="Banner preview"
+										class="w-full h-48 object-cover rounded-2xl border border-slate-200 shadow-sm" />
+									<div
+										class="absolute inset-0 bg-black bg-opacity-40 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+										<span class="text-white text-sm font-medium">Change Banner</span>
+									</div>
+								</div>
+								<div v-else
+									class="w-full h-48 bg-linear-to-br from-slate-200 to-slate-300 rounded-2xl flex items-center justify-center">
+									<svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor"
+										viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+											d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+									</svg>
+								</div>
+								<input type="file" accept="image/*" @change="onBannerChange" :disabled="loading"
+									class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-2xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" />
+								<p class="text-xs text-slate-500">Recommended size: 800x400px for best display</p>
 							</div>
 						</div>
 
