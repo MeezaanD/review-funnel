@@ -15,6 +15,9 @@ const bannerFile = ref<File | null>(null);
 
 const primaryColor = ref("#2563eb");
 const secondaryColor = ref("#1e293b");
+const pageBackgroundColor = ref("#d6d3d1");
+const contentCardColor = ref("#ffffff");
+const starContainerColor = ref("#f5f5f4");
 
 const loading = ref(false);
 const error = ref("");
@@ -58,6 +61,9 @@ const onSubmit = async () => {
 			displayBanner: bannerUrl,
 			primaryColor: primaryColor.value,
 			secondaryColor: secondaryColor.value,
+			pageBackgroundColor: pageBackgroundColor.value,
+			contentCardColor: contentCardColor.value,
+			starContainerColor: starContainerColor.value,
 			createdAt: Date.now(),
 		});
 
@@ -213,6 +219,47 @@ const onSubmit = async () => {
 									</svg>
 									These colors will be used throughout your review funnel pages to match your brand
 									identity.
+								</p>
+							</div>
+						</div>
+
+						<!-- Background Colors -->
+						<div class="pt-6 border-t border-slate-100">
+							<label class="block text-sm font-semibold text-slate-800 mb-4">Background Colors</label>
+							<div class="grid sm:grid-cols-3 gap-4 sm:gap-6">
+								<div>
+									<label class="block text-xs text-slate-500 mb-2">Page Background</label>
+									<div class="flex items-center gap-3">
+										<input type="color" v-model="pageBackgroundColor" :disabled="loading"
+											class="h-12 w-12 rounded-2xl cursor-pointer border border-slate-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed" />
+										<span class="text-sm font-mono text-gray-600">{{ pageBackgroundColor }}</span>
+									</div>
+								</div>
+								<div>
+									<label class="block text-xs text-slate-500 mb-2">Content Card</label>
+									<div class="flex items-center gap-3">
+										<input type="color" v-model="contentCardColor" :disabled="loading"
+											class="h-12 w-12 rounded-2xl cursor-pointer border border-slate-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed" />
+										<span class="text-sm font-mono text-gray-600">{{ contentCardColor }}</span>
+									</div>
+								</div>
+								<div>
+									<label class="block text-xs text-slate-500 mb-2">Star Container</label>
+									<div class="flex items-center gap-3">
+										<input type="color" v-model="starContainerColor" :disabled="loading"
+											class="h-12 w-12 rounded-2xl cursor-pointer border border-slate-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed" />
+										<span class="text-sm font-mono text-gray-600">{{ starContainerColor }}</span>
+									</div>
+								</div>
+							</div>
+							<div class="mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+								<p class="text-xs text-slate-600">
+									<svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor"
+										viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+											d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+									</svg>
+									These colors control the background appearance of your review funnel page.
 								</p>
 							</div>
 						</div>

@@ -17,6 +17,9 @@ const editLogoFile = ref<File | null>(null);
 const editBannerFile = ref<File | null>(null);
 const editPrimaryColor = ref("#2563eb");
 const editSecondaryColor = ref("#1e293b");
+const editPageBgColor = ref("#d6d3d1");
+const editContentCardColor = ref("#ffffff");
+const editStarContainerColor = ref("#f5f5f4");
 
 const loadBusinesses = async () => {
 	loading.value = true;
@@ -36,6 +39,9 @@ const startEdit = (b: Business) => {
 	editGoogle.value = b.googleProfileUrl;
 	editPrimaryColor.value = b.primaryColor || "#2563eb";
 	editSecondaryColor.value = b.secondaryColor || "#1e293b";
+	editPageBgColor.value = b.pageBackgroundColor || "#d6d3d1";
+	editContentCardColor.value = b.contentCardColor || "#ffffff";
+	editStarContainerColor.value = b.starContainerColor || "#f5f5f4";
 	editLogoFile.value = null;
 	editBannerFile.value = null;
 };
@@ -82,6 +88,9 @@ const saveEdit = async () => {
 		googleProfileUrl: editGoogle.value,
 		primaryColor: editPrimaryColor.value,
 		secondaryColor: editSecondaryColor.value,
+		pageBackgroundColor: editPageBgColor.value,
+		contentCardColor: editContentCardColor.value,
+		starContainerColor: editStarContainerColor.value,
 		...(logoUrlToUpdate && { logoUrl: logoUrlToUpdate }),
 		...(bannerUrlToUpdate && { displayBanner: bannerUrlToUpdate }),
 	});
@@ -256,6 +265,45 @@ const copyLink = (id: string) => {
 											<span class="text-sm font-mono text-slate-600">{{ editSecondaryColor }}</span>
 										</div>
 									</div>
+								</div>
+							</div>
+
+							<!-- Background Colors -->
+							<div class="pt-6 border-t border-slate-100">
+								<label class="block text-sm font-semibold text-slate-800 mb-4">Background Colors</label>
+								<div class="grid sm:grid-cols-3 gap-4 sm:gap-6">
+									<div>
+										<label class="block text-xs text-slate-500 mb-2">Page Background</label>
+										<div class="flex items-center gap-3">
+											<input type="color" v-model="editPageBgColor"
+												class="h-12 w-12 rounded-2xl cursor-pointer border border-slate-200 shadow-sm" />
+											<span class="text-sm font-mono text-slate-600">{{ editPageBgColor }}</span>
+										</div>
+									</div>
+									<div>
+										<label class="block text-xs text-slate-500 mb-2">Content Card</label>
+										<div class="flex items-center gap-3">
+											<input type="color" v-model="editContentCardColor"
+												class="h-12 w-12 rounded-2xl cursor-pointer border border-slate-200 shadow-sm" />
+											<span class="text-sm font-mono text-slate-600">{{ editContentCardColor }}</span>
+										</div>
+									</div>
+									<div>
+										<label class="block text-xs text-slate-500 mb-2">Star Container</label>
+										<div class="flex items-center gap-3">
+											<input type="color" v-model="editStarContainerColor"
+												class="h-12 w-12 rounded-2xl cursor-pointer border border-slate-200 shadow-sm" />
+											<span class="text-sm font-mono text-slate-600">{{ editStarContainerColor }}</span>
+										</div>
+									</div>
+								</div>
+								<div class="mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+									<p class="text-xs text-slate-600">
+										<svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+										</svg>
+										These colors control the background appearance of your review funnel page.
+									</p>
 								</div>
 							</div>
 
