@@ -8,5 +8,5 @@ export const handleRating = async (businessId: string, stars: number) => {
 		timestamp: Date.now(),
 	});
 
-	return stars >= 3 ? "redirect" : "feedback";
+	return stars > 3 ? "redirect" : "feedback";
 };
