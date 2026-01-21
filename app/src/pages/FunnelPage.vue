@@ -52,12 +52,12 @@ const starContainerStyle = computed(() => ({
 
 		<!-- Realistic concrete texture overlay -->
 		<div class="fixed inset-0 opacity-40 -z-10"
-			style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;200&quot; height=&quot;200&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cfilter id=&quot;noise&quot;%3E%3CfeTurbulence type=&quot;fractalNoise&quot; baseFrequency=&quot;1.2&quot; numOctaves=&quot;6&quot; stitchTiles=&quot;stitch&quot;/%3E%3CfeColorMatrix type=&quot;saturate&quot; values=&quot;0&quot;/%3E%3C/filter%3E%3Crect width=&quot;100%25&quot; height=&quot;100%25&quot; filter=&quot;url(%23noise)&quot; opacity=&quot;0.8&quot;/%3E%3C/svg%3E'); background-size: 400px 400px;">
+			style="background-image: url('data:image/svg+xml,%3Csvg width=%22200%22 height=%22200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.2%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix type=%22saturate%22 values=%220%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22 opacity=%220.8%22/%3E%3C/svg%3E'); background-size: 400px 400px;">
 		</div>
 
 		<!-- Fine grain texture for realistic concrete feel -->
 		<div class="fixed inset-0 opacity-25 -z-10"
-			style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;100&quot; height=&quot;100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cfilter id=&quot;grain&quot;%3E%3CfeTurbulence type=&quot;turbulence&quot; baseFrequency=&quot;2.5&quot; numOctaves=&quot;3&quot; seed=&quot;2&quot;/%3E%3CfeColorMatrix type=&quot;saturate&quot; values=&quot;0&quot;/%3E%3C/filter%3E%3Crect width=&quot;100%25&quot; height=&quot;100%25&quot; filter=&quot;url(%23grain)&quot;/%3E%3C/svg%3E'); background-size: 150px 150px;">
+			style="background-image: url('data:image/svg+xml,%3Csvg width=%22200%22 height=%22200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.2%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix type=%22saturate%22 values=%220%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22 opacity=%220.8%22/%3E%3C/svg%3E'); background-size: 150px 150px;">
 		</div>
 
 		<!-- Subtle mottled variations like real concrete -->
@@ -140,8 +140,7 @@ const starContainerStyle = computed(() => ({
 			<!-- Content -->
 			<div v-else
 				class="bg-white/50 backdrop-blur-3xl rounded-[2.5rem] sm:rounded-[3rem] shadow-[0_25px_70px_rgba(0,0,0,0.2)] border border-white/70 overflow-visible relative"
-				:style="pageBackgroundStyle"
-				style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;200&quot; height=&quot;200&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cfilter id=&quot;noise&quot;%3E%3CfeTurbulence type=&quot;fractalNoise&quot; baseFrequency=&quot;1.2&quot; numOctaves=&quot;6&quot; stitchTiles=&quot;stitch&quot;/%3E%3CfeColorMatrix type=&quot;saturate&quot; values=&quot;0&quot;/%3E%3C/filter%3E%3Crect width=&quot;100%25&quot; height=&quot;100%25&quot; filter=&quot;url(%23noise)&quot; opacity=&quot;0.8&quot;/%3E%3C/svg%3E'); background-size: 400px 400px;">
+				:style="pageBackgroundStyle" style="background-image: url('data:image/svg+xml,%3Csvg width=%22200%22 height=%22200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.2%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix type=%22saturate%22 values=%220%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22 opacity=%220.8%22/%3E%3C/svg%3E'); background-size: 400px 400px;">
 				<!-- Logo - Positioned with negative margin at top -->
 				<div class="absolute -top-12 sm:-top-14 left-1/2 transform -translate-x-1/2 z-20">
 					<div class="relative">
@@ -176,8 +175,7 @@ const starContainerStyle = computed(() => ({
 					</div>
 
 					<!-- Content Card with liquid glass effect -->
-					<div
-						class="backdrop-blur-2xl rounded-4xl sm:rounded-[2.5rem] shadow-[0_15px_50px_rgba(0,0,0,0.15)] border border-white/80 overflow-hidden"
+					<div class="backdrop-blur-2xl rounded-4xl sm:rounded-[2.5rem] shadow-[0_15px_50px_rgba(0,0,0,0.15)] border border-white/80 overflow-hidden"
 						:style="contentCardStyle">
 						<!-- Banner Image - Top of Card -->
 						<div v-if="business?.displayBanner" class="relative h-32 sm:h-40 overflow-hidden">
@@ -189,11 +187,11 @@ const starContainerStyle = computed(() => ({
 
 						<!-- Content Padding Section -->
 						<div class="p-5 sm:p-6"
-							style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;200&quot; height=&quot;200&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cfilter id=&quot;noise&quot;%3E%3CfeTurbulence type=&quot;fractalNoise&quot; baseFrequency=&quot;1.2&quot; numOctaves=&quot;6&quot; stitchTiles=&quot;stitch&quot;/%3E%3CfeColorMatrix type=&quot;saturate&quot; values=&quot;0&quot;/%3E%3C/filter%3E%3Crect width=&quot;100%25&quot; height=&quot;100%25&quot; filter=&quot;url(%23noise)&quot; opacity=&quot;0.8&quot;/%3E%3C/svg%3E'); background-size: 400px 400px;">
+							style="background-image: url('data:image/svg+xml,%3Csvg width=%22200%22 height=%22200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.2%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix type=%22saturate%22 values=%220%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22 opacity=%220.8%22/%3E%3C/svg%3E'); background-size: 400px 400px;">
 							<!-- Star Rating Container -->
 							<div class="backdrop-blur-lg rounded-2xl p-4 sm:p-5 mb-5 sm:mb-6 shadow-lg border border-white/80"
 								:style="starContainerStyle"
-								style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;200&quot; height=&quot;200&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cfilter id=&quot;noise&quot;%3E%3CfeTurbulence type=&quot;fractalNoise&quot; baseFrequency=&quot;1.2&quot; numOctaves=&quot;6&quot; stitchTiles=&quot;stitch&quot;/%3E%3CfeColorMatrix type=&quot;saturate&quot; values=&quot;0&quot;/%3E%3C/filter%3E%3Crect width=&quot;100%25&quot; height=&quot;100%25&quot; filter=&quot;url(%23noise)&quot; opacity=&quot;0.8&quot;/%3E%3C/svg%3E'); background-size: 400px 400px;">
+								style="background-image: url('data:image/svg+xml,%3Csvg width=%22200%22 height=%22200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.2%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix type=%22saturate%22 values=%220%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22 opacity=%220.8%22/%3E%3C/svg%3E'); background-size: 400px 400px;">
 								<div class="flex justify-center items-end gap-2.5 sm:gap-3.5">
 									<button v-for="i in 5" :key="i" @click="onRate(i)"
 										class="flex flex-col items-center justify-end transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none group">
