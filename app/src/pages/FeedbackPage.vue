@@ -70,13 +70,6 @@ const onSubmit = async () => {
 		return;
 	}
 
-	// Basic email validation
-	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-	if (!emailRegex.test(userEmail.value.trim())) {
-		error.value = "Please provide a valid email address.";
-		return;
-	}
-
 	if (!businessEmail.value) {
 		error.value = "Business email missing.";
 		return;
@@ -88,7 +81,7 @@ const onSubmit = async () => {
 		const businessId = route.params.businessId as string;
 		const trimmedEmail = userEmail.value.trim();
 		const trimmedMessage = message.value.trim();
-		const trimmedPhone = cellphoneNumber.value.trim() || undefined;
+		const trimmedPhone = cellphoneNumber.value.trim().length > 0 ? cellphoneNumber.value.trim() : undefined;
 
 		// Send email notification
 		await sendFeedbackEmail({
@@ -124,7 +117,7 @@ const onSubmit = async () => {
 					<div class="space-y-2">
 						<label class="text-sm font-medium text-slate-700">Your feedback <span
 								class="text-red-500">*</span></label>
-						<textarea v-model="message" rows="5" required minlength="10"
+						<textarea v-model="message" rows="5" required minlength="10" class="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-slate-900 placeholder:text-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
 							placeholder="What did you like or how can we improve?" />
 					</div>
 
@@ -140,7 +133,7 @@ const onSubmit = async () => {
 						<label class="text-sm font-medium text-slate-700">Your phone number (optional)</label>
 						<input v-model="cellphoneNumber" type="tel"
 							class="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-slate-900 placeholder:text-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
-							placeholder="+1 (555) 000-0000" />
+							placeholder="073 444 2751" />
 					</div>
 
 					<div v-if="error"

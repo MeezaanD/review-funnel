@@ -44,6 +44,10 @@ export const sendFeedbackEmail = async ({
 		return response;
 	} catch (err: any) {
 		console.error("EmailJS Error:", err);
-		throw new Error(err.text || "Failed to send email. Please try again.");
+		const errorMessage =
+			(err && (err.text || err.message)) ||
+			(typeof err === "string" ? err : "") ||
+			"Failed to send email. Please try again.";
+		throw new Error(errorMessage);
 	}
 };
