@@ -7,7 +7,8 @@ const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 interface FeedbackData {
 	businessEmail: string;
 	message: string;
-	userEmail?: string;
+	userEmail: string;
+	cellphoneNumber?: string;
 	businessId?: string;
 }
 
@@ -15,10 +16,16 @@ export const sendFeedbackEmail = async ({
 	businessEmail,
 	message,
 	userEmail,
+	cellphoneNumber,
 	businessId,
 }: FeedbackData) => {
 	if (!businessEmail) throw new Error("Business email is required.");
 	if (!message) throw new Error("Message is required.");
+	if (!userEmail) throw new Error("User email is required.");
+
+	if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
+		throw new Error("Email service is not properly configured.");
+	}
 
 	try {
 		const response = await emailjs.send(
@@ -27,7 +34,8 @@ export const sendFeedbackEmail = async ({
 			{
 				business_email: businessEmail,
 				message,
-				user_email: userEmail || "Not provided",
+				user_email: userEmail,
+				cellphone_number: cellphoneNumber || "Not provided",
 				business_id: businessId,
 			},
 			{ publicKey: PUBLIC_KEY }
@@ -36,6 +44,6 @@ export const sendFeedbackEmail = async ({
 		return response;
 	} catch (err: any) {
 		console.error("EmailJS Error:", err);
-		throw err;
+		throw new Error(err.text || "Failed to send email. Please try again.");
 	}
 };

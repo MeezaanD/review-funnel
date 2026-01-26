@@ -11,6 +11,7 @@ const router = useRouter();
 
 const message = ref("");
 const userEmail = ref("");
+const cellphoneNumber = ref("");
 const loading = ref(false);
 const error = ref("");
 const success = ref("");
@@ -59,8 +60,20 @@ const onSubmit = async () => {
 	error.value = "";
 	success.value = "";
 
-	if (!message.value) {
-		error.value = "Please write a message.";
+	if (!message.value.trim() || message.value.trim().length < 10) {
+		error.value = "Please write a message (at least 10 characters).";
+		return;
+	}
+
+	if (!userEmail.value.trim()) {
+		error.value = "Please provide your email address.";
+		return;
+	}
+
+	// Basic email validation
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	if (!emailRegex.test(userEmail.value.trim())) {
+		error.value = "Please provide a valid email address.";
 		return;
 	}
 
@@ -72,11 +85,18 @@ const onSubmit = async () => {
 	loading.value = true;
 
 	try {
+		const businessId = route.params.businessId as string;
+		const trimmedEmail = userEmail.value.trim();
+		const trimmedMessage = message.value.trim();
+		const trimmedPhone = cellphoneNumber.value.trim() || undefined;
+
+		// Send email notification
 		await sendFeedbackEmail({
 			businessEmail: businessEmail.value,
-			message: message.value,
-			userEmail: userEmail.value,
-			businessId: route.params.businessId as string,
+			message: trimmedMessage,
+			userEmail: trimmedEmail,
+			cellphoneNumber: trimmedPhone,
+			businessId,
 		});
 
 		// Redirect to thank you page
@@ -102,17 +122,25 @@ const onSubmit = async () => {
 			<div class="bg-white/95 backdrop-blur rounded-3xl shadow-sm border border-slate-100 p-6 sm:p-8">
 				<form @submit.prevent="onSubmit" class="space-y-6">
 					<div class="space-y-2">
-						<label class="text-sm font-medium text-slate-700">Your feedback</label>
-						<textarea v-model="message" rows="5"
-							class="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-slate-900 placeholder:text-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 resize-none"
+						<label class="text-sm font-medium text-slate-700">Your feedback <span
+								class="text-red-500">*</span></label>
+						<textarea v-model="message" rows="5" required minlength="10"
 							placeholder="What did you like or how can we improve?" />
 					</div>
 
 					<div class="space-y-2">
-						<label class="text-sm font-medium text-slate-700">Your email (optional)</label>
-						<input v-model="userEmail" type="email"
+						<label class="text-sm font-medium text-slate-700">Your email <span
+								class="text-red-500">*</span></label>
+						<input v-model="userEmail" type="email" required
 							class="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-slate-900 placeholder:text-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
 							placeholder="you@example.com" />
+					</div>
+
+					<div class="space-y-2">
+						<label class="text-sm font-medium text-slate-700">Your phone number (optional)</label>
+						<input v-model="cellphoneNumber" type="tel"
+							class="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-slate-900 placeholder:text-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
+							placeholder="+1 (555) 000-0000" />
 					</div>
 
 					<div v-if="error"
